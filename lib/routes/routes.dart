@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../member_profile.dart';
+import '../user_profile.dart';
 
 ///Creates a class with accessible routes to all screens of the app
 class PageRoutes {
@@ -9,7 +9,7 @@ class PageRoutes {
   ///Builds screen widgets and maps them to class attributes
   Map<String, WidgetBuilder> routes() {
     return {
-      memberProfile: (context) => const MemberProfile(),
+      memberProfile: (context) => const UserProfile(),
     };
   }
 }
