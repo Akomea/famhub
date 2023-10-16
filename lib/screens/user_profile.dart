@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'models/Family.dart';
-import 'models/FamilyMember.dart';
+import '../models/Family.dart';
+import '../models/FamilyMember.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});

@@ -1,11 +1,12 @@
 import 'package:famhub/routes/routes.dart';
+import 'package:famhub/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'app_internalisation.dart';
-import 'user_profile.dart';
+import 'screens/user_profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
 // You can use the library anywhere in the app even in theme
-      home: const UserProfile(),
+      home: const WelcomeScreen(),
       locale: Get.deviceLocale,
       translations: AppTranslations(),
       routes: PageRoutes().routes(),
