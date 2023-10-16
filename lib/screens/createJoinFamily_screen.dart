@@ -5,16 +5,16 @@ import 'package:get/get_core/src/get_main.dart';
 import '../routes/routes.dart';
 import '../widgets/button.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class CreateJoinFamilyScreen extends StatefulWidget {
+  const CreateJoinFamilyScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<CreateJoinFamilyScreen> createState() => _CreateJoinFamilyScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _CreateJoinFamilyScreenState extends State<CreateJoinFamilyScreen> {
   String? errorMessage = '';
-  bool isLogin = true;
+  bool isJoin = true;
   bool _showError = false;
 
   final TextEditingController _controllerName = TextEditingController();
@@ -24,6 +24,15 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Registration', style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: SafeArea(
@@ -32,25 +41,26 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Text('Welcome', style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Color(0xffc95664))),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  child: Text('Hello', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Color(0xffc95664))),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Text('back!', style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold)),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  child: Text('there!', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20,),
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Text('Sign in to access to your family space and shared information'),
+                  padding: const EdgeInsets.only(left: 30.0, right: 30),
+                  child: Text(isJoin? 'Join an existing family account to access shared information': 'Create a family account to access to your account and shared information'),
                 ),
                 const SizedBox(height: 40,),
                 Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 30),
+                  margin: const EdgeInsets.only(top: 10.0, left: 30, right: 30),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text('login',
+                    child: Text(
+                        isJoin ? 'join family' : 'create family',
                         style: const TextStyle(
                             color: Color(0xFF0C005A),
                             fontSize: 35,
@@ -83,6 +93,23 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         child: Column(
                           children: <Widget>[
+                            Visibility(
+                              visible: isJoin? false:true,
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey[100]!))
+                                ),
+                                child: TextField(
+                                  keyboardType: TextInputType.name,
+                                  controller: _controllerName,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'family name',
+                                      hintStyle: TextStyle(color: _showError? Colors.red: Colors.grey[500])
+                                  ),
+                                ),
+                              ),),
                             Container(
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
@@ -93,7 +120,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 controller: _controllerEmail,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'email',
+                                    hintText: 'family ID',
                                     hintStyle: TextStyle(color: Colors.grey[500])
                                 ),
                               ),
@@ -106,7 +133,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 controller: _controllerPassword,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'password',
+                                    hintText: 'passcode',
                                     hintStyle: TextStyle(color: Colors.grey[500])
                                 ),
                               ),
@@ -121,9 +148,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       _loginOrRegisterButton(),
                       TextButton(
                         onPressed: () {
-                          Get.toNamed(PageRoutes.welcome);
+                          Get.toNamed(PageRoutes.memberProfile);
                         },
-                        child: Text('Forgot password?', style: const TextStyle(color: Color(0xffEC4F4A)),),
+                        child: const Text('Login', style: TextStyle(color: Color(0xffEC4F4A)),),
                       ),
                     ],
                   ),
@@ -145,8 +172,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _submitButton() {
     return GradientButton(
-      onPressed:() =>{},
-      buttonText: 'Login', color: const Color(0xff0a2768),
+      onPressed:(){
+        !isJoin? Navigator.pushNamed(context, PageRoutes.createFamily): Navigator.pushNamed(context, PageRoutes.memberProfile);
+      },
+      buttonText: isJoin? 'Join' : 'Next', color: const Color(0xff0a2768),
     );
   }
 
@@ -154,11 +183,11 @@ class _SignInScreenState extends State<SignInScreen> {
     return TextButton(
       onPressed: () {
         setState(() {
-          Navigator.pushNamed(context, PageRoutes.signUp);
+          isJoin = !isJoin;
           errorMessage = '';
         });
       },
-      child: const RegisterOrLogin(text1: 'Don\'t have an account? ', text2: 'Sign Up',),
+      child: isJoin? const RegisterOrLogin(text1: 'Not part of a family yet? ', text2: 'Create a family account',): const RegisterOrLogin(text1: 'Already registered with a family? ', text2: 'Join',),
     );
   }
 

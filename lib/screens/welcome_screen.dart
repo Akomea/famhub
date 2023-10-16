@@ -1,4 +1,8 @@
+import 'package:famhub/routes/routes.dart';
+import 'package:famhub/screens/createJoinFamily_screen.dart';
+import 'package:famhub/screens/signIn_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../widgets/button.dart';
@@ -20,11 +24,26 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(height: 10,),
             const Text('Share important info with your family,\ndon\'t go to your grave with it :)', textAlign: TextAlign.center,),
             const SizedBox(height: 40,),
-            GradientButton(onPressed: ()=>{}, color: Color(0xff0a2768), buttonText: 'Sign Up'),
+            GradientButton(
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  const CreateJoinFamilyScreen(),
+                    ),
+                  );
+            }, color: Color(0xff0a2768), buttonText: 'Sign Up'),
             const SizedBox(height: 10,),
-            GradientButton(onPressed: ()=>{}, color: Color(0xffc95664), buttonText: 'Login'),
+            GradientButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  const SignInScreen(),
+                ),
+              );
+            }, color: Color(0xffc95664), buttonText: 'Login'),
             const SizedBox(height: 10,),
-            const Text('Read our Terms and Conditions', style: TextStyle(color: Color(0xff0a2768)),),
+            const Text('Read our T&Cs and Privacy Policy', style: TextStyle(color: Color(0xff0a2768)),),
           ],
         ),
       )),

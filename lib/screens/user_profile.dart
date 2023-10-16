@@ -53,10 +53,13 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         systemOverlayStyle: const SystemUiOverlayStyle(
           // Status bar color
           statusBarColor: Color(0xfffaf2e3),
-
           // Status bar brightness (optional)
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
@@ -72,15 +75,10 @@ class _UserProfileState extends State<UserProfile> {
         ],
         title: Align(
           alignment: Alignment.topLeft,
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_back_ios, color: Colors.black,),
-              Text(
-                'profile'.tr,
-                style:
-                const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ],
+          child: Text(
+            'profile'.tr,
+            style:
+            const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
         elevation: 0,
