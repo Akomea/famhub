@@ -15,7 +15,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   String? errorMessage = '';
   bool isLogin = true;
-  bool _showError = false;
+  final bool _showError = false;
 
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
@@ -32,26 +32,26 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Text('Welcome', style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Color(0xffc95664))),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  child: Text('Welcome', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Color(0xffc95664))),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Text('back!', style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold)),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  child: Text('back!', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
                   child: Text('Sign in to access to your family space and shared information'),
                 ),
                 const SizedBox(height: 40,),
                 Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 30),
-                  child: Align(
+                  margin: const EdgeInsets.only(top: 10.0, left: 30),
+                  child: const Align(
                     alignment: Alignment.topLeft,
                     child: Text('login',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Color(0xFF0C005A),
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         onPressed: () {
                           Get.toNamed(PageRoutes.welcome);
                         },
-                        child: Text('Forgot password?', style: const TextStyle(color: Color(0xffEC4F4A)),),
+                        child: const Text('Forgot password?', style: TextStyle(color: Color(0xffEC4F4A)),),
                       ),
                     ],
                   ),
@@ -145,7 +145,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _submitButton() {
     return GradientButton(
-      onPressed:() =>{},
+      onPressed:(){
+        Navigator.pushNamed(context, PageRoutes.memberProfile);
+      },
       buttonText: 'Login', color: const Color(0xff0a2768),
     );
   }

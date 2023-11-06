@@ -11,7 +11,6 @@ class PageRoutes {
   static const String welcome = 'welcome';
   static const String signIn = 'sign_in';
   static const String signUp = 'sign_up';
-  static const String joinFamily = 'join_family';
   static const String createFamily = 'create_family';
 
   ///Builds screen widgets and maps them to class attributes
@@ -21,7 +20,6 @@ class PageRoutes {
       welcome: (context) => const UserProfile(),
       signIn: (context) =>  const SignInScreen(),
       signUp: (context) =>  const CreateJoinFamilyScreen(),
-      joinFamily: (context) => const UserProfile(),
       createFamily: (context) => const CreateFamilyScreen(),
     };
   }

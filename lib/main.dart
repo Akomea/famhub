@@ -1,3 +1,4 @@
+import 'package:famhub/constants.dart';
 import 'package:famhub/routes/routes.dart';
 import 'package:famhub/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       translations: AppTranslations(),
       routes: PageRoutes().routes(),
       theme: ThemeData(
+        primaryColor: kPrimaryColour,
           textTheme: const TextTheme(
               bodyMedium: TextStyle(
                   fontFamily: 'Roboto'

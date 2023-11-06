@@ -1,3 +1,4 @@
+import 'package:famhub/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -14,34 +15,59 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int selectedFamilyIndex = 0; // Initialize with the first family as the default selected family
+  List<FamilyMember> members = []; // Initialize an empty members list
+  List<Family> fam = []; // Initialize an empty family of members list
+  final ApiService apiService = ApiService('http://localhost:8000/members/');
+  @override
+  void initState() {
+    super.initState();
 
-  final List<Family> families = [
-    Family(
-      familyInitials: 'FA1',
-      familyName: 'Family 1',
+    apiService.fetchMemberDetails(1).then((data) {
+      if (data != null) {
+        setState(() {
+          members = [
+            FamilyMember(
+              memberID: data['id'] ?? 'N/A',
+              firstName: data['first_name'] ?? 'N/A',
+              middleName: data['middle_name'] ?? 'N/A',
+              familyName: data['family_name'] ?? 'N/A',
+              email: data['email'] ?? 'N/A',
+              dateOfBirth: data['date_of_birth'] ?? 'N/A',
+              mFamilies: (data['families'] as List<dynamic>?)
+                  ?.map((family) => Family(
+                  familyName: data['family_name'] ?? 'N/A', members: [], familyInitials: ''))
+                  ?.toList() ?? [],
+            ),
+          ];
+        });
+      } else {
+        // Handle the case where data is null or not as expected
+        print('Error: API response is null or not as expected');
+      }
+    }).catchError((error) {
+      // Handle other errors
+      print('Error fetching member details: $error');
+    });
 
-      members: [
-        FamilyMember(name: 'Member 1', email: 'member1@example.com'),
-      ],
-    ),
-    Family(
-      familyInitials: 'FA2',
-      familyName: 'Family 2',
-      members: [
-        FamilyMember(name: 'Member 2', email: 'member2@example.com'),
-        FamilyMember(name: 'Member 3', email: 'member3@example.com'),
-      ],
-    ),
-    Family(
-      familyInitials: 'FA3',
-      familyName: 'Family 3',
-      members: [
-        FamilyMember(name: 'Member 4', email: 'member4@example.com'),
-        FamilyMember(name: 'Member 5', email: 'member3@example.com'),
-        FamilyMember(name: 'Member 6', email: 'member4@example.com'),
-      ],
-    ),
-  ];
+    apiService.fetchFamiliesOfMember(1).then((families) {
+      if (families != null) {
+        // Use the 'families' data here
+        fam = families.map((familyData) => Family(
+          familyName: familyData['family_name'] ?? 'N/A',
+          members: [],
+          familyInitials: '',
+        )).toList();
+      } else {
+        // Handle the case where data is null or not as expected
+        print('Error: API response is null or not as expected');
+      }
+    }).catchError((error) {
+      // Handle other errors
+      print('Error fetching member families: $error');
+    });
+
+  }
+
 
   void updateSelectedFamilyIndex(int newIndex) {
     setState(() {
@@ -54,7 +80,7 @@ class _UserProfileState extends State<UserProfile> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -91,11 +117,11 @@ class _UserProfileState extends State<UserProfile> {
             height: 200,
             padding: const EdgeInsets.only(bottom: 16),
             color: const Color(0xfffaf2e3),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+            child:  Padding(
+              padding: EdgeInsets.only(left: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   CircleAvatar(
                     radius: 35,
                     child: Text('KA'),
@@ -103,16 +129,16 @@ class _UserProfileState extends State<UserProfile> {
                   SizedBox(height: 10,),
                   Text('Kenn Akomea', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black,fontSize: 24),),
                   UserInfo(text: 'kam@yahoo.com',),
-                  UserInfo(iconData: Icons.cake_outlined, text: '09/04/1999',),
+                  UserInfo(iconData: Icons.cake_outlined, text: 'members[0].dateOfBirth',),
                 ],
               ),
             ),
           ),
           const Header(title: 'Families'),
-          FamiliesList(families: families, selectedFamilyIndex: selectedFamilyIndex,updateSelectedFamilyIndex: updateSelectedFamilyIndex, ),
+          FamiliesList(members: members, selectedFamilyIndex: selectedFamilyIndex,updateSelectedFamilyIndex: updateSelectedFamilyIndex, ),
           const SizedBox(height: 10),
           const Header(title: 'Members'),
-          FamilyMembersList(families: families, selectedFamilyIndex: selectedFamilyIndex,)
+          FamilyMembersList(members: members, selectedFamilyIndex: selectedFamilyIndex,)
 
         ],
       )
@@ -179,12 +205,12 @@ class Header extends StatelessWidget {
 }
 
 class FamiliesList extends StatefulWidget {
-  final List<Family> families;
+  final List<FamilyMember> members;
   int selectedFamilyIndex;
   final void Function(int) updateSelectedFamilyIndex; // Callback function
 
 
-  FamiliesList({super.key, required this.families, required this.selectedFamilyIndex, required this.updateSelectedFamilyIndex});
+  FamiliesList({super.key, required this.members, required this.selectedFamilyIndex, required this.updateSelectedFamilyIndex});
 
   @override
   State<FamiliesList> createState() => _FamiliesListState();
@@ -199,15 +225,15 @@ class _FamiliesListState extends State<FamiliesList> {
       height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.families.length,
+        itemCount: widget.members.length,
         itemBuilder: (context, index) {
-          final family = widget.families[index]; // Get the initials of the family member
+          final family = widget.members[index]; // Get the initials of the family member
           return GestureDetector(
             onTap: (){
               // Update the selected family index when a family avatar is tapped
               widget.updateSelectedFamilyIndex(index);
             },
-              child: FamilyAvatar(initials: family.familyInitials, familyName: family.familyName, isSelected: index == widget.selectedFamilyIndex,));
+              child: FamilyAvatar(initials: family.memberID, familyName: family.familyName, isSelected: index == widget.selectedFamilyIndex,));
         },
       ),
     );
@@ -215,9 +241,9 @@ class _FamiliesListState extends State<FamiliesList> {
 }
 
 class FamilyMembersList extends StatefulWidget {
-  final List<Family> families;
+  final List<FamilyMember> members;
   int selectedFamilyIndex;
-  FamilyMembersList({super.key, required this.families, required this.selectedFamilyIndex});
+  FamilyMembersList({super.key, required this.members, required this.selectedFamilyIndex});
 
   @override
   State<FamilyMembersList> createState() => _FamilyMembersListState();
@@ -226,14 +252,14 @@ class FamilyMembersList extends StatefulWidget {
 class _FamilyMembersListState extends State<FamilyMembersList> {
   @override
   Widget build(BuildContext context) {
-    final selectedFamily = widget.families[widget.selectedFamilyIndex]; // Get the selected family
+    final selectedFamily = widget.members[widget.selectedFamilyIndex]; // Get the selected family
     return Expanded(
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: selectedFamily.members.length,
+        itemCount: widget.members.length,
         itemBuilder: (context, index) {
-          final member = selectedFamily.members[index];
-          return MemberCard(name: member.name, email: member.email);
+          final member = widget.members[index];
+          return MemberCard(name: member.firstName, email: member.email);
         },
       ),
     );

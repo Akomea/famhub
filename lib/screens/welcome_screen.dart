@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
+import '../constants.dart';
 import '../widgets/button.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -32,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                       builder: (context) =>  const CreateJoinFamilyScreen(),
                     ),
                   );
-            }, color: Color(0xff0a2768), buttonText: 'Sign Up'),
+            }, color: kPrimaryColour, buttonText: 'Sign Up'),
             const SizedBox(height: 10,),
             GradientButton(onPressed: (){
               Navigator.push(
@@ -41,9 +42,9 @@ class WelcomeScreen extends StatelessWidget {
                   builder: (context) =>  const SignInScreen(),
                 ),
               );
-            }, color: Color(0xffc95664), buttonText: 'Login'),
+            }, color: kAccentColour, buttonText: 'Login'),
             const SizedBox(height: 10,),
-            const Text('Read our T&Cs and Privacy Policy', style: TextStyle(color: Color(0xff0a2768)),),
+            const Text('Read our T&Cs and Privacy Policy', style: TextStyle(color: kPrimaryColour),),
           ],
         ),
       )),

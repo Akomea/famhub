@@ -14,7 +14,7 @@ class CreateFamilyScreen extends StatefulWidget {
 
 class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
   String? errorMessage = '';
-  bool _showError = false;
+  final bool _showError = false;
 
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
